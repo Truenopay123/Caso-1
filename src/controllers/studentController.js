@@ -30,7 +30,21 @@ function getAlumnos(req, res) {
   return res.status(result.statusCode || 200).json(result);
 }
 
+function putAlumno(req, res) {
+  const { matricula } = req.params;
+  const result = proxyService.updateStudent(matricula, req.body, getAuthHeader(req));
+  return res.status(result.statusCode || 200).json(result);
+}
+
+function deleteAlumno(req, res) {
+  const { matricula } = req.params;
+  const result = proxyService.deleteStudent(matricula, getAuthHeader(req));
+  return res.status(result.statusCode || 200).json(result);
+}
+
 module.exports = {
   postAlumnos,
-  getAlumnos
+  getAlumnos,
+  putAlumno,
+  deleteAlumno
 };

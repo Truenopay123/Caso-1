@@ -1,52 +1,110 @@
 <!doctype html>
 <html lang="es">
   <head>
-    <!-- Metadatos base del documento -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Universidad - Registro y Reinscripción</title>
-    <!-- Hoja de estilos del cliente -->
+    <title>Universidad | Dashboard CRUD de Alumnos</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <!-- Contenedor principal de la UI -->
-    <main class="page">
-      <!-- Tarjeta principal con formulario y respuesta -->
-      <section class="card">
-        <h1>Gestión de Alumnos</h1>
-        <p class="subtitle">
-          Registro de nuevos alumnos y reinscripción con arquitectura Cliente-Servidor.
-        </p>
-
-        <!-- Formulario que envía datos al endpoint POST /alumnos -->
-        <form id="alumnoForm" class="form">
-          <label for="nombre">Nombre</label>
-          <input id="nombre" name="nombre" type="text" placeholder="Ej. Ana López" required />
-
-          <label for="matricula">Matrícula</label>
-          <input id="matricula" name="matricula" type="text" placeholder="Ej. A2026001" required />
-
-          <label for="tipo">Tipo</label>
-          <select id="tipo" name="tipo" required>
-            <option value="nuevo">nuevo</option>
-            <option value="reinscripcion">reinscripcion</option>
-          </select>
-
+    <main class="dashboard">
+      <header class="topbar">
+        <div>
+          <h1>Dashboard de Alumnos</h1>
+          <p class="subtitle">Gestión de registro, edición, consulta y eliminación.</p>
+        </div>
+        <div class="token-box">
           <label for="token">Token</label>
           <input id="token" name="token" type="text" placeholder="TOKEN_UNIVERSIDAD_2026" required />
+          <button id="loadBtn" type="button">Cargar datos</button>
+        </div>
+      </header>
 
-          <button type="submit">Enviar solicitud</button>
-        </form>
+      <section class="stats-grid">
+        <article class="stat-card">
+          <span>Total alumnos</span>
+          <strong id="totalStudents">0</strong>
+        </article>
+        <article class="stat-card">
+          <span>Activos</span>
+          <strong id="activeStudents">0</strong>
+        </article>
+        <article class="stat-card">
+          <span>Última actualización</span>
+          <strong id="lastUpdate">-</strong>
+        </article>
+      </section>
 
-        <!-- Zona donde se muestra la respuesta del backend -->
-        <section class="result">
-          <h2>Respuesta del servidor</h2>
-          <pre id="output">Aún no hay respuesta...</pre>
+      <section class="content-grid">
+        <section class="panel">
+          <h2>Nuevo / Reinscripción</h2>
+          <form id="alumnoForm" class="form">
+            <label for="nombre">Nombre</label>
+            <input id="nombre" name="nombre" type="text" placeholder="Ej. Ana López" required />
+
+            <label for="matricula">Matrícula</label>
+            <input id="matricula" name="matricula" type="text" placeholder="Ej. A2026001" required />
+
+            <label for="tipo">Tipo de operación</label>
+            <select id="tipo" name="tipo" required>
+              <option value="nuevo">Nuevo</option>
+              <option value="reinscripcion">Reinscripción</option>
+            </select>
+
+            <button type="submit">Guardar</button>
+          </form>
         </section>
+
+        <section class="panel">
+          <h2>Edición rápida</h2>
+          <form id="editForm" class="form">
+            <label for="editMatricula">Matrícula</label>
+            <input id="editMatricula" type="text" placeholder="Selecciona un alumno" readonly required />
+
+            <label for="editNombre">Nombre</label>
+            <input id="editNombre" type="text" placeholder="Nuevo nombre" required />
+
+            <div class="btn-row">
+              <button id="saveEditBtn" type="submit">Actualizar</button>
+              <button id="cancelEditBtn" type="button" class="secondary">Cancelar</button>
+            </div>
+          </form>
+        </section>
+      </section>
+
+      <section class="panel table-panel">
+        <div class="table-head">
+          <h2>Listado de alumnos</h2>
+          <button id="refreshBtn" type="button" class="secondary">Refrescar</button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Matrícula</th>
+                <th>Nombre</th>
+                <th>Estado</th>
+                <th>Última operación</th>
+                <th>Actualizado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="studentsBody">
+              <tr>
+                <td colspan="6" class="empty">Sin datos cargados</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel result">
+        <h2>Respuesta del servidor</h2>
+        <pre id="output">Aún no hay respuesta...</pre>
       </section>
     </main>
 
-    <!-- Script cliente que realiza la petición fetch -->
     <script src="app.js"></script>
   </body>
 </html>

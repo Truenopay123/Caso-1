@@ -3,11 +3,14 @@
 Aplicación completa de arquitectura Cliente-Servidor para:
 - Registrar alumnos nuevos
 - Reinscribir alumnos existentes
+- Actualizar alumnos
+- Eliminar alumnos
 
 Incluye:
 - Patrón Proxy para control de autenticación con token
 - Patrón Chain of Responsibility para validaciones
 - Backend Express + frontend HTML/CSS/JS
+- Dashboard CRUD responsive para móvil y escritorio
 - Base de datos en memoria
 
 ---
@@ -48,9 +51,9 @@ src/controllers/ (orquestación)
 
 ### public/
 - Contiene el cliente web (UI).
-- `index.html`: formulario con campos en español.
-- `styles.css`: diseño tipo card moderno.
-- `app.js`: captura formulario y hace `fetch` a `POST /alumnos`.
+- `index.html`: dashboard CRUD con métricas, formularios y tabla.
+- `styles.css`: diseño profesional responsive (mobile-first).
+- `app.js`: integra operaciones `GET/POST/PUT/DELETE` sobre `/alumnos`.
 
 ### src/config/
 - Configuración global del backend.
@@ -74,7 +77,7 @@ src/controllers/ (orquestación)
 
 ### src/services/
 - Lógica de negocio del dominio.
-- `studentService.js`: aplica reglas de registro/reinscripción y responde con estado.
+- `studentService.js`: aplica reglas de registro/reinscripción y CRUD de alumnos.
 
 ### src/controllers/
 - Orquesta el flujo de la petición.
@@ -82,7 +85,7 @@ src/controllers/ (orquestación)
 
 ### src/routes/
 - Define endpoints de la API.
-- `studentRoutes.js`: registra `POST /alumnos` y `GET /alumnos`.
+- `studentRoutes.js`: registra `GET`, `POST`, `PUT` y `DELETE` de alumnos.
 
 ### src/
 - `app.js`: crea la app Express, middlewares y rutas.
@@ -151,7 +154,7 @@ Token por defecto esperado por el Proxy:
 
 ---
 
-## Endpoint principal
+## Endpoints
 
 ### `POST /alumnos`
 
@@ -168,6 +171,24 @@ Body esperado:
 Valores válidos de `tipo`:
 - `nuevo`
 - `reinscripcion`
+
+### `GET /alumnos`
+
+Retorna el listado completo de alumnos en memoria.
+
+### `PUT /alumnos/:matricula`
+
+Body esperado:
+
+```json
+{
+  "nombre": "Ana Lopez Actualizada"
+}
+```
+
+### `DELETE /alumnos/:matricula`
+
+Elimina al alumno indicado por matrícula.
 
 ---
 

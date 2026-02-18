@@ -48,6 +48,24 @@ class StudentServiceProxy {
 
     return this.realService.listStudents();
   }
+
+  updateStudent(matricula, payload, rawAuthHeader) {
+    const auth = this.authenticate(rawAuthHeader);
+    if (!auth.ok) {
+      return auth;
+    }
+
+    return this.realService.updateStudent(matricula, payload);
+  }
+
+  deleteStudent(matricula, rawAuthHeader) {
+    const auth = this.authenticate(rawAuthHeader);
+    if (!auth.ok) {
+      return auth;
+    }
+
+    return this.realService.deleteStudent(matricula);
+  }
 }
 
 module.exports = StudentServiceProxy;

@@ -68,6 +68,83 @@ class StudentService {
       data: db.students
     };
   }
+
+  updateStudent(matricula, payload) {
+    const normalizedMatricula = String(matricula || "").trim();
+    const nombre = String(payload.nombre || "").trim();
+
+    if (!normalizedMatricula) {
+      return {
+        ok: false,
+        statusCode: 400,
+        message: "La matrícula es obligatoria para actualizar."
+      };
+    }
+
+    if (!nombre) {
+      return {
+        ok: false,
+        statusCode: 400,
+        message: "El nombre es obligatorio para actualizar."
+      };
+    }
+
+    const existingStudent = db.students.find(
+      (student) => student.matricula === normalizedMatricula
+    );
+
+    if (!existingStudent) {
+      return {
+        ok: false,
+        statusCode: 404,
+        message: "No se encontró el alumno para actualizar."
+      };
+    }
+
+    existingStudent.nombre = nombre;
+    existingStudent.updatedAt = new Date().toISOString();
+    existingStudent.ultimaOperacion = "actualizacion";
+
+    return {
+      ok: true,
+      statusCode: 200,
+      message: "Alumno actualizado correctamente.",
+      data: existingStudent
+    };
+  }
+
+  deleteStudent(matricula) {
+    const normalizedMatricula = String(matricula || "").trim();
+
+    if (!normalizedMatricula) {
+      return {
+        ok: false,
+        statusCode: 400,
+        message: "La matrícula es obligatoria para eliminar."
+      };
+    }
+
+    const index = db.students.findIndex(
+      (student) => student.matricula === normalizedMatricula
+    );
+
+    if (index === -1) {
+      return {
+        ok: false,
+        statusCode: 404,
+        message: "No se encontró el alumno para eliminar."
+      };
+    }
+
+    const [deletedStudent] = db.students.splice(index, 1);
+
+    return {
+      ok: true,
+      statusCode: 200,
+      message: "Alumno eliminado correctamente.",
+      data: deletedStudent
+    };
+  }
 }
 
 module.exports = StudentService;
