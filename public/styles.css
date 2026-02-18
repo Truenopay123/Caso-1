@@ -1,0 +1,104 @@
+/* Reset básico para consistencia de cajas */
+* {
+  box-sizing: border-box;
+}
+
+/* Fondo general y tipografía de la página */
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #e0e7ff, #f8fafc);
+  color: #111827;
+}
+
+/* Centrado de la tarjeta principal */
+.page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+/* Card moderna que contiene formulario y resultados */
+.card {
+  width: min(560px, 95vw);
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+  padding: 24px;
+}
+
+h1 {
+  margin: 0 0 8px;
+}
+
+.subtitle {
+  margin: 0 0 20px;
+  color: #4b5563;
+}
+
+/* Layout del formulario */
+.form {
+  display: grid;
+  gap: 10px;
+}
+
+label {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* Estilos base para campos y botón */
+input,
+select,
+button {
+  width: 100%;
+  padding: 11px 12px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  font-size: 14px;
+}
+
+/* Estado focus para accesibilidad visual */
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* Botón principal de envío */
+button {
+  margin-top: 6px;
+  border: none;
+  background: #2563eb;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #1d4ed8;
+}
+
+/* Bloque de salida de respuesta del backend */
+.result {
+  margin-top: 20px;
+}
+
+.result h2 {
+  margin: 0 0 8px;
+  font-size: 17px;
+}
+
+/* Consola visual para JSON de respuesta */
+pre {
+  margin: 0;
+  padding: 14px;
+  border-radius: 10px;
+  background: #0f172a;
+  color: #e2e8f0;
+  overflow: auto;
+  min-height: 80px;
+}

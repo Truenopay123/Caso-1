@@ -1,0 +1,14 @@
+{
+  "name": "universidad-client-server",
+  "version": "1.0.0",
+  "description": "Aplicación cliente-servidor con Express, Proxy y Chain of Responsibility",
+  "main": "src/server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}

@@ -1,0 +1,50 @@
+### Health check
+GET http://localhost:3000/health
+
+### Registrar alumno nuevo (token válido)
+POST http://localhost:3000/alumnos
+Content-Type: application/json
+Authorization: Bearer TOKEN_UNIVERSIDAD_2026
+
+{
+  "nombre": "Ana Lopez",
+  "matricula": "A2026001",
+  "tipo": "nuevo"
+}
+
+### Reinscribir alumno existente (token válido)
+POST http://localhost:3000/alumnos
+Content-Type: application/json
+Authorization: Bearer TOKEN_UNIVERSIDAD_2026
+
+{
+  "nombre": "Ana Lopez",
+  "matricula": "A2026001",
+  "tipo": "reinscripcion"
+}
+
+### Error por token inválido (Proxy)
+POST http://localhost:3000/alumnos
+Content-Type: application/json
+Authorization: Bearer TOKEN_INVALIDO
+
+{
+  "nombre": "Pedro Perez",
+  "matricula": "A2026999",
+  "tipo": "nuevo"
+}
+
+### Error por tipo inválido (Chain of Responsibility)
+POST http://localhost:3000/alumnos
+Content-Type: application/json
+Authorization: Bearer TOKEN_UNIVERSIDAD_2026
+
+{
+  "nombre": "Pedro Perez",
+  "matricula": "A2026999",
+  "tipo": "cambio"
+}
+
+### Listar base en memoria (requiere token)
+GET http://localhost:3000/alumnos
+Authorization: Bearer TOKEN_UNIVERSIDAD_2026

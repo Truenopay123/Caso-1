@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <!-- Metadatos base del documento -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Universidad - Registro y Reinscripción</title>
+    <!-- Hoja de estilos del cliente -->
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Contenedor principal de la UI -->
+    <main class="page">
+      <!-- Tarjeta principal con formulario y respuesta -->
+      <section class="card">
+        <h1>Gestión de Alumnos</h1>
+        <p class="subtitle">
+          Registro de nuevos alumnos y reinscripción con arquitectura Cliente-Servidor.
+        </p>
+
+        <!-- Formulario que envía datos al endpoint POST /alumnos -->
+        <form id="alumnoForm" class="form">
+          <label for="nombre">Nombre</label>
+          <input id="nombre" name="nombre" type="text" placeholder="Ej. Ana López" required />
+
+          <label for="matricula">Matrícula</label>
+          <input id="matricula" name="matricula" type="text" placeholder="Ej. A2026001" required />
+
+          <label for="tipo">Tipo</label>
+          <select id="tipo" name="tipo" required>
+            <option value="nuevo">nuevo</option>
+            <option value="reinscripcion">reinscripcion</option>
+          </select>
+
+          <label for="token">Token</label>
+          <input id="token" name="token" type="text" placeholder="TOKEN_UNIVERSIDAD_2026" required />
+
+          <button type="submit">Enviar solicitud</button>
+        </form>
+
+        <!-- Zona donde se muestra la respuesta del backend -->
+        <section class="result">
+          <h2>Respuesta del servidor</h2>
+          <pre id="output">Aún no hay respuesta...</pre>
+        </section>
+      </section>
+    </main>
+
+    <!-- Script cliente que realiza la petición fetch -->
+    <script src="app.js"></script>
+  </body>
+</html>
