@@ -1,6 +1,3 @@
-  # ─────────────────────────────────────────
-  # Bryan Axel Cortes Cortes
-  # ──
 name: CI/CD Pipeline - Node.js
 
 on:
@@ -12,69 +9,39 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
+
   # ─────────────────────────────────────────
   # JOB 1: Análisis de Calidad con SonarQube
   # ─────────────────────────────────────────
   sonarqube:
-    name: SonarQube Analysis
+    name: Análisis de Calidad de Código
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout código
+      - name: Clonación del repositorio (Checkout)
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # necesario para análisis completo de historial
+          fetch-depth: 0
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Instalar dependencias
-        run: npm ci
-
-      - name: Ejecutar tests con coverage
-        run: npm test -- --coverage
-        # Si no tienes tests aún, puedes comentar esta línea temporalmente
-
-      # Usa SonarCloud (opción A):
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
+      - name: Ejecución de Escáner SonarQube
+        uses: SonarSource/sonarqube-scan-action@master
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-      # O usa tu instancia propia de GCP (opción B) — descomenta esto:
-      # - name: SonarQube Scan
-      #   uses: SonarSource/sonarqube-scan-action@master
-      #   env:
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      #     SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        with:
+          args: >
+            -Dsonar.projectKey=mi-proyecto-gestion-sw
+            -Dsonar.qualitygate.wait=true
 
   # ─────────────────────────────────────────
   # JOB 2: Prueba de Rendimiento con K6
   # ─────────────────────────────────────────
   k6-load-test:
-    name: K6 Load Test
+    name: Prueba de Rendimiento K6
     runs-on: ubuntu-latest
-    needs: sonarqube   # ← solo corre si SonarQube pasa
+    needs: sonarqube
     steps:
-      - name: Checkout código
+      - name: Clonación del repositorio (Checkout)
         uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Instalar dependencias
-        run: npm ci
-
-      - name: Iniciar la aplicación en segundo plano
-        run: |
-          npm start &
-          sleep 5  # esperar que la app arranque
 
       - name: Instalar K6
         run: |
@@ -91,20 +58,19 @@ jobs:
 
       - name: Ejecutar prueba de carga K6
         run: k6 run tests/load-test.js
-        # Si K6 no cumple los thresholds, este step falla y el pipeline para
 
   # ─────────────────────────────────────────
   # JOB 3: Build y Push a GHCR
   # ─────────────────────────────────────────
   build-and-push:
-    name: Build & Push Docker Image
+    name: Empaquetado Docker
     runs-on: ubuntu-latest
-    needs: k6-load-test   # ← solo corre si K6 pasa
+    needs: k6-load-test
     permissions:
       contents: read
       packages: write
     steps:
-      - name: Checkout código
+      - name: Clonación del repositorio (Checkout)
         uses: actions/checkout@v4
 
       - name: Login a GitHub Container Registry
@@ -135,9 +101,9 @@ jobs:
   # JOB 4: Deploy al servidor cloud
   # ─────────────────────────────────────────
   deploy:
-    name: Deploy to Cloud Server
+    name: Despliegue Automático
     runs-on: ubuntu-latest
-    needs: build-and-push   # ← solo corre si la imagen se construyó
+    needs: build-and-push
     steps:
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
@@ -146,18 +112,14 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            # Login a GHCR desde el servidor
             echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io \
               -u ${{ github.actor }} --password-stdin
 
-            # Detener y eliminar contenedor anterior
             docker stop my-node-app || true
             docker rm   my-node-app || true
 
-            # Descargar imagen más reciente
             docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:main
 
-            # Ejecutar nuevo contenedor
             docker run -d \
               --name my-node-app \
               -p 80:3000 \
