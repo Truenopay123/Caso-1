@@ -5,10 +5,8 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci --only=production
 
-COPY src/ ./src/
-COPY api/ ./api/
-COPY public/ ./public/
+COPY . .
 
 EXPOSE 3000
 
-CMD ["node", "src/index.js"]
+CMD ["node", "src/server.js"]
